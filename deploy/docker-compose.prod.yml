@@ -1,0 +1,53 @@
+name: pwa-varejo
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USERNAME:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?defina DB_PASSWORD no .env}
+      POSTGRES_DB: ${DB_NAME:-pwa_varejo}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-postgres} -d ${DB_NAME:-pwa_varejo}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ../backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USERNAME: ${DB_USERNAME:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME:-pwa_varejo}
+      JWT_SECRET: ${JWT_SECRET:?defina JWT_SECRET no .env}
+      JWT_EXPIRATION: ${JWT_EXPIRATION:-24h}
+      CORS_ORIGIN: ${CORS_ORIGIN:?defina CORS_ORIGIN no .env}
+      STORE_NAME: ${STORE_NAME:-Loja Teste}
+    ports:
+      - "127.0.0.1:3001:3001"
+
+  frontend:
+    build:
+      context: ../frontend
+      args:
+        VITE_API_URL: /api
+        VITE_STORE_NAME: ${STORE_NAME:-Loja Teste}
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "127.0.0.1:8080:80"
+
+volumes:
+  pgdata:

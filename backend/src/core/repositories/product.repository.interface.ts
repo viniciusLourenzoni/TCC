@@ -1,9 +1,18 @@
 import { Product } from '../domain/entities';
 
+export interface FindProductsOptions {
+  search?: string;
+  categoryId?: string;
+  activeOnly?: boolean;
+  limit?: number;
+  offset?: number;
+}
+
 export interface IProductRepository {
   findById(id: string): Promise<Product | null>;
   findByBarcode(barcode: string): Promise<Product | null>;
-  findAll(activeOnly?: boolean): Promise<Product[]>;
+  findAll(options?: FindProductsOptions): Promise<Product[]>;
+  count(options?: FindProductsOptions): Promise<number>;
   search(query: string): Promise<Product[]>;
   create(product: Product): Promise<Product>;
   update(id: string, product: Partial<Product>): Promise<Product>;

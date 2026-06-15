@@ -1,0 +1,68 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+    background-color: #f9fafb;
+    color: #111827;
+    font-family: theme('fontFamily.sans');
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    overscroll-behavior-y: none;
+  }
+
+  button {
+    @apply outline-none focus-visible:ring-2 focus-visible:ring-ring/40;
+  }
+
+  input,
+  textarea,
+  select {
+    @apply outline-none;
+  }
+}
+
+@layer components {
+  .app-container {
+    @apply mx-auto w-full max-w-[480px] min-h-dvh bg-surface flex flex-col;
+  }
+
+  .input-base {
+    @apply w-full h-11 rounded-lg border border-border bg-surface px-3 text-sm
+           placeholder:text-muted-foreground/70
+           focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/20
+           transition-colors;
+  }
+
+  .btn-primary {
+    @apply inline-flex h-12 w-full items-center justify-center rounded-lg
+           bg-primary text-primary-foreground font-semibold text-sm
+           hover:bg-primary-700 active:scale-[0.98] transition-all
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-accent {
+    @apply inline-flex h-12 w-full items-center justify-center rounded-lg
+           bg-accent text-accent-foreground font-semibold text-sm
+           hover:bg-accent-600 active:scale-[0.98] transition-all
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-ghost {
+    @apply inline-flex h-11 items-center justify-center rounded-lg
+           bg-muted text-foreground font-medium text-sm px-4
+           hover:bg-muted/80 active:scale-[0.98] transition-all;
+  }
+
+  .card {
+    @apply rounded-xl bg-surface border border-border shadow-card p-4;
+  }
+}

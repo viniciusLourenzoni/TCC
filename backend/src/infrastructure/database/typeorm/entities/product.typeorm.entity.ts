@@ -5,7 +5,10 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   Index,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
+import { CategoryEntity } from './category.typeorm.entity';
 
 @Entity('products')
 export class ProductEntity {
@@ -19,8 +22,19 @@ export class ProductEntity {
   @Column({ type: 'text', nullable: true })
   description: string;
 
-  @Column({ type: 'int' }) // Store in cents
+  @Column({ type: 'int' }) // venda, em centavos
   price: number;
+
+  @Column({ name: 'cost_price', type: 'int', nullable: true }) // custo, em centavos
+  costPrice: number;
+
+  @Column({ name: 'category_id', type: 'uuid', nullable: true })
+  @Index()
+  categoryId: string;
+
+  @ManyToOne(() => CategoryEntity, { nullable: true, eager: false })
+  @JoinColumn({ name: 'category_id' })
+  category?: CategoryEntity;
 
   @Column({ unique: true, nullable: true })
   @Index()

@@ -30,17 +30,15 @@ export class UserTypeOrmRepository implements IUserRepository {
   }
 
   async create(user: User): Promise<User> {
-    const entity = this.toEntity(user);
+    const entity = this.userRepository.create(this.toEntity(user));
     const saved = await this.userRepository.save(entity);
     return this.toDomain(saved);
   }
 
   async update(id: string, user: Partial<User>): Promise<User> {
-    await this.userRepository.update(id, this.toEntity(user as User));
+    await this.userRepository.update(id, this.toEntity(user));
     const updated = await this.userRepository.findOne({ where: { id } });
-    if (!updated) {
-      throw new Error('User not found');
-    }
+    if (!updated) throw new Error('User not found after update');
     return this.toDomain(updated);
   }
 
@@ -49,26 +47,24 @@ export class UserTypeOrmRepository implements IUserRepository {
   }
 
   private toDomain(entity: UserEntity): User {
-    return new User(
-      entity.id,
-      entity.email,
-      entity.password,
-      entity.name,
-      entity.role,
-      entity.createdAt,
-      entity.updatedAt,
-    );
+    return new User({
+      id: entity.id,
+      email: entity.email,
+      password: entity.password,
+      name: entity.name,
+      role: entity.role,
+      createdAt: entity.createdAt,
+      updatedAt: entity.updatedAt,
+    });
   }
 
-  private toEntity(domain: User): Partial<UserEntity> {
-    return {
-      id: domain.id,
-      email: domain.email,
-      password: domain.password,
-      name: domain.name,
-      role: domain.role,
-      createdAt: domain.createdAt,
-      updatedAt: domain.updatedAt,
-    };
+  private toEntity(domain: Partial<User>): Partial<UserEntity> {
+    const out: Partial<UserEntity> = {};
+    if (domain.id !== undefined) out.id = domain.id;
+    if (domain.email !== undefined) out.email = domain.email;
+    if (domain.password !== undefined) out.password = domain.password;
+    if (domain.name !== undefined) out.name = domain.name;
+    if (domain.role !== undefined) out.role = domain.role;
+    return out;
   }
 }

@@ -62,3 +62,7 @@ Thumbs.db
 
 README.md
 SETUP_INSTRUCTIONS.md
+
+# Chaves e segredos — nunca commitar
+*.pem
+*.key

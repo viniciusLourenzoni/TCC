@@ -81,7 +81,7 @@ export class InitialSchema1733143200000 implements MigrationInterface {
 
     // Create sales table
     await queryRunner.query(`
-      CREATE TYPE "payment_method_enum" AS ENUM('CASH', 'CREDIT_CARD', 'DEBIT_CARD', 'PIX');
+      CREATE TYPE "payment_method_enum" AS ENUM('CASH', 'CREDIT_CARD', 'DEBIT_CARD', 'PIX', 'FIADO');
     `);
 
     await queryRunner.query(`

@@ -2,7 +2,9 @@ export class Product {
   id: string;
   name: string;
   description?: string;
-  price: number; // in cents to avoid floating point issues
+  price: number; // venda, em centavos
+  costPrice?: number; // custo, em centavos
+  categoryId?: string;
   barcode?: string;
   stock: number;
   isActive: boolean;
@@ -36,5 +38,9 @@ export class Product {
 
   getPriceInReais(): number {
     return this.price / 100;
+  }
+
+  getCostPriceInReais(): number | undefined {
+    return this.costPrice == null ? undefined : this.costPrice / 100;
   }
 }
