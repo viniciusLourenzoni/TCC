@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { Plus, Search, Package } from 'lucide-react';
+import { Plus, Search, Package, Tags } from 'lucide-react';
 import { TopBar } from '@/components/layout/TopBar';
 import { listProducts } from '@/lib/api/products';
 import { listCategories } from '@/lib/api/categories';
@@ -39,13 +39,22 @@ export function ProductsPage() {
       <TopBar
         title="Produtos"
         right={
-          <Link
-            to="/produtos/novo"
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground"
-            aria-label="Cadastrar produto"
-          >
-            <Plus className="h-5 w-5" />
-          </Link>
+          <div className="flex items-center gap-1">
+            <Link
+              to="/produtos/categorias"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-full hover:bg-muted"
+              aria-label="Gerenciar categorias"
+            >
+              <Tags className="h-5 w-5" />
+            </Link>
+            <Link
+              to="/produtos/novo"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground"
+              aria-label="Cadastrar produto"
+            >
+              <Plus className="h-5 w-5" />
+            </Link>
+          </div>
         }
       />
 

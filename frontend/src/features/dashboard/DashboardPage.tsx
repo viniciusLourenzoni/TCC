@@ -14,7 +14,7 @@ import { NotificationBell } from '@/components/NotificationBell';
 import { useAuthStore } from '@/stores/authStore';
 import { unregisterPush } from '@/lib/push/pushManager';
 import { getDashboardStats, listSales } from '@/lib/api/sales';
-import { formatCents, formatTimeBR } from '@/lib/format';
+import { formatCents, formatTimeBR, paymentMethodLabel } from '@/lib/format';
 import { useNetworkStatus } from '@/lib/sync/useNetworkStatus';
 
 const storeName = (import.meta.env.VITE_STORE_NAME as string) ?? 'Loja';
@@ -159,7 +159,7 @@ export function DashboardPage() {
                 </div>
               </div>
               <span className="text-[10px] font-semibold uppercase text-muted-foreground">
-                {sale.paymentMethod ?? '—'}
+                {paymentMethodLabel(sale.paymentMethod)}
               </span>
             </div>
           ))}

@@ -7,6 +7,19 @@ export function formatCents(cents: number): string {
   return brl.format((cents ?? 0) / 100);
 }
 
+const PAYMENT_LABELS: Record<string, string> = {
+  CASH: 'Dinheiro',
+  CREDIT_CARD: 'Crédito',
+  DEBIT_CARD: 'Débito',
+  PIX: 'PIX',
+  FIADO: 'Fiado',
+};
+
+export function paymentMethodLabel(method?: string | null): string {
+  if (!method) return '—';
+  return PAYMENT_LABELS[method] ?? method;
+}
+
 // Máscara de moeda: recebe o texto digitado e devolve "1.234,56".
 // Trata os dígitos como centavos (ex.: "1234" -> "12,34").
 export function maskBRL(raw: string): string {

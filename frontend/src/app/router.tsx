@@ -11,6 +11,7 @@ import { POSPage } from '@/features/pos/POSPage';
 import { CheckoutPage } from '@/features/pos/CheckoutPage';
 import { SalesPage } from '@/features/sales/SalesPage';
 import { NotificationsPage } from '@/features/notifications/NotificationsPage';
+import { CategoriesPage } from '@/features/categories/CategoriesPage';
 
 export const router = createBrowserRouter([
   { path: '/login', element: <LoginPage /> },
@@ -24,6 +25,7 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <DashboardPage /> },
       { path: 'produtos', element: <ProductsPage /> },
+      { path: 'produtos/categorias', element: <CategoriesPage /> },
       { path: 'produtos/novo', element: <ProductFormPage /> },
       { path: 'produtos/:id', element: <ProductFormPage /> },
       { path: 'clientes', element: <CustomersPage /> },

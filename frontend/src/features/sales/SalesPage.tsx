@@ -2,15 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Receipt, CircleCheck, CircleAlert } from 'lucide-react';
 import { TopBar } from '@/components/layout/TopBar';
 import { listSales } from '@/lib/api/sales';
-import { formatCents, formatDateTimeBR } from '@/lib/format';
-
-const labelByPayment: Record<string, string> = {
-  CASH: 'Dinheiro',
-  CREDIT_CARD: 'Crédito',
-  DEBIT_CARD: 'Débito',
-  PIX: 'PIX',
-  FIADO: 'Fiado',
-};
+import { formatCents, formatDateTimeBR, paymentMethodLabel } from '@/lib/format';
 
 export function SalesPage() {
   const salesQ = useQuery({
@@ -51,7 +43,7 @@ export function SalesPage() {
               </div>
             </div>
             <span className="text-[10px] font-semibold uppercase text-muted-foreground">
-              {labelByPayment[sale.paymentMethod ?? ''] ?? sale.paymentMethod ?? ''}
+              {paymentMethodLabel(sale.paymentMethod)}
             </span>
           </div>
         ))}
