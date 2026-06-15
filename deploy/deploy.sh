@@ -22,4 +22,4 @@ rsync -az --delete \
   "$REPO_DIR/" "$TARGET:~/pwa-varejo/"
 
 echo ">> Executando setup remoto"
-ssh -i "$PEM" "$TARGET" 'chmod +x ~/pwa-varejo/deploy/remote-setup.sh && ~/pwa-varejo/deploy/remote-setup.sh'
+ssh -i "$PEM" "$TARGET" "chmod +x ~/pwa-varejo/deploy/remote-setup.sh && DOMAIN='${DOMAIN:-tcc.vikasoftwares.com.br}' ~/pwa-varejo/deploy/remote-setup.sh"

@@ -142,12 +142,8 @@ if ! command -v certbot >/dev/null 2>&1; then
   echo ">> Instalando certbot"
   sudo apt-get install -y -qq certbot python3-certbot-nginx
 fi
-if ! sudo test -d "/etc/letsencrypt/live/$DOMAIN"; then
-  echo ">> Emitindo certificado para $DOMAIN"
-  sudo certbot --nginx -d "$DOMAIN" --non-interactive --agree-tos --register-unsafely-without-email --redirect
-else
-  echo ">> Certificado já existe"
-fi
+echo ">> Garantindo certificado para $DOMAIN"
+sudo certbot --nginx -d "$DOMAIN" --non-interactive --agree-tos --register-unsafely-without-email --redirect --keep-until-expiring
 
 echo ""
 echo "=============================================="

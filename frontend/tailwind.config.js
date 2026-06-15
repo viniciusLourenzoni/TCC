@@ -14,10 +14,10 @@ export default {
           foreground: '#FFFFFF',
         },
         accent: {
-          DEFAULT: '#10B981',
+          DEFAULT: '#047857',
           50: '#ECFDF5',
           500: '#10B981',
-          600: '#059669',
+          600: '#065F46',
           foreground: '#FFFFFF',
         },
         destructive: {
@@ -32,8 +32,8 @@ export default {
         border: '#E5E7EB',
         ring: '#1E3A8A',
         payment: {
-          cash: '#10B981',
-          credit: '#3B82F6',
+          cash: '#047857',
+          credit: '#2563EB',
           debit: '#8B5CF6',
           pix: '#06B6D4',
           fiado: '#F59E0B',

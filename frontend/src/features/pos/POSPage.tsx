@@ -61,6 +61,8 @@ export function POSPage() {
                 'h-2.5 w-2.5 rounded-full',
                 online ? 'bg-accent' : 'bg-payment-fiado',
               )}
+              role="img"
+              aria-label={online ? 'online' : 'offline'}
             />
             <NotificationBell />
           </div>
