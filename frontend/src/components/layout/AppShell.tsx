@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import { BottomNav } from './BottomNav';
 import { OfflineBanner } from './OfflineBanner';
+import { PWAInstallTutorial } from '@/components/onboarding/PWAInstallTutorial';
 import { useHydrateOfflineCache } from '@/lib/sync/useHydrateOfflineCache';
 import { registerPush } from '@/lib/push/pushManager';
 
@@ -20,6 +21,7 @@ export function AppShell() {
         <Outlet />
       </main>
       <BottomNav />
+      <PWAInstallTutorial />
     </div>
   );
 }
