@@ -14,7 +14,7 @@ import {
   updateProduct,
 } from '@/lib/api/products';
 import { apiErrorMessage } from '@/lib/api/client';
-import { parseReaisToCents } from '@/lib/format';
+import { parseReaisToCents, maskBRL } from '@/lib/format';
 import { fileToCompressedDataUrl } from '@/lib/image';
 
 const schema = z.object({
@@ -64,16 +64,16 @@ export function ProductFormPage() {
     },
   });
 
-  const { register, handleSubmit, formState, reset } = form;
+  const { register, handleSubmit, formState, reset, setValue } = form;
 
   useEffect(() => {
     if (productQ.data) {
       reset({
         name: productQ.data.name,
         categoryId: productQ.data.categoryId ?? '',
-        priceText: ((productQ.data.price ?? 0) / 100).toFixed(2).replace('.', ','),
+        priceText: maskBRL(String(productQ.data.price ?? 0)),
         costPriceText: productQ.data.costPrice
-          ? (productQ.data.costPrice / 100).toFixed(2).replace('.', ',')
+          ? maskBRL(String(productQ.data.costPrice))
           : '',
         stock: productQ.data.stock,
         barcode: productQ.data.barcode ?? '',
@@ -189,20 +189,38 @@ export function ProductFormPage() {
             label="Preço Venda (R$)"
             error={formState.errors.priceText?.message}
           >
-            <input
-              inputMode="decimal"
-              className="input-base"
-              placeholder="0,00"
-              {...register('priceText')}
-            />
+            <div className="relative">
+              <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
+                R$
+              </span>
+              <input
+                inputMode="decimal"
+                className="input-base pl-9"
+                placeholder="0,00"
+                {...register('priceText')}
+                onChange={(e) =>
+                  setValue('priceText', maskBRL(e.target.value), {
+                    shouldValidate: true,
+                  })
+                }
+              />
+            </div>
           </Field>
           <Field label="Preço Custo (R$)">
-            <input
-              inputMode="decimal"
-              className="input-base"
-              placeholder="0,00"
-              {...register('costPriceText')}
-            />
+            <div className="relative">
+              <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
+                R$
+              </span>
+              <input
+                inputMode="decimal"
+                className="input-base pl-9"
+                placeholder="0,00"
+                {...register('costPriceText')}
+                onChange={(e) =>
+                  setValue('costPriceText', maskBRL(e.target.value))
+                }
+              />
+            </div>
           </Field>
         </div>
 

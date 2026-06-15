@@ -40,9 +40,13 @@ export default defineConfig({
               url.pathname.startsWith('/api/products') ||
               url.pathname.startsWith('/api/categories') ||
               url.pathname.startsWith('/api/customers'),
-            handler: 'StaleWhileRevalidate',
+            // NetworkFirst: online mostra dados frescos (cadastros aparecem na
+            // hora); offline cai para o cache. networkTimeoutSeconds garante
+            // resposta rápida do cache quando a rede está ruim.
+            handler: 'NetworkFirst',
             options: {
               cacheName: 'api-readonly',
+              networkTimeoutSeconds: 4,
               expiration: { maxAgeSeconds: 60 * 60 * 24 },
             },
           },
