@@ -37,7 +37,9 @@ export class SaleTypeOrmRepository implements ISaleRepository {
   async findAll(options: FindSalesOptions = {}): Promise<Sale[]> {
     const qb = this.buildQuery(options);
     qb.leftJoinAndSelect('sale.items', 'items');
-    qb.orderBy('sale.created_at', 'DESC');
+    // usar o nome da PROPRIEDADE (createdAt), não da coluna (created_at):
+    // com take + leftJoinAndSelect o TypeORM resolve o ORDER BY pela metadata
+    qb.orderBy('sale.createdAt', 'DESC');
     if (options.limit !== undefined) qb.take(options.limit);
     if (options.offset !== undefined) qb.skip(options.offset);
     const list = await qb.getMany();
