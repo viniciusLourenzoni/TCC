@@ -5,12 +5,13 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Trash2 } from 'lucide-react';
 import { TopBar } from '@/components/layout/TopBar';
 import {
   createCustomer,
   getCustomer,
   updateCustomer,
+  deleteCustomer,
 } from '@/lib/api/customers';
 import { apiErrorMessage } from '@/lib/api/client';
 
@@ -80,6 +81,20 @@ export function CustomerFormPage() {
     onError: (err) => toast.error(apiErrorMessage(err)),
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: () => deleteCustomer(id as string),
+    onSuccess: async () => {
+      toast.success('Cliente excluído');
+      await qc.invalidateQueries({ queryKey: ['customers'] });
+      navigate('/clientes');
+    },
+    onError: (err) => toast.error(apiErrorMessage(err)),
+  });
+
+  function handleDelete() {
+    if (window.confirm('Excluir este cliente?')) deleteMutation.mutate();
+  }
+
   return (
     <>
       <TopBar title={isEdit ? 'Editar Cliente' : 'Cadastrar Cliente'} back />
@@ -128,6 +143,23 @@ export function CustomerFormPage() {
             'Salvar Cliente'
           )}
         </button>
+
+        {isEdit && (
+          <button
+            type="button"
+            onClick={handleDelete}
+            disabled={deleteMutation.isPending}
+            className="inline-flex h-11 items-center justify-center gap-2 rounded-lg border border-destructive/40 text-sm font-medium text-destructive hover:bg-destructive/5 disabled:opacity-50"
+          >
+            {deleteMutation.isPending ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <>
+                <Trash2 className="h-4 w-4" /> Excluir cliente
+              </>
+            )}
+          </button>
+        )}
       </form>
     </>
   );

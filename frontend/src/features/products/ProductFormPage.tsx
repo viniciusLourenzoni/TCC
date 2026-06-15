@@ -5,13 +5,14 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { Loader2, ImagePlus, X } from 'lucide-react';
+import { Loader2, ImagePlus, X, Trash2 } from 'lucide-react';
 import { TopBar } from '@/components/layout/TopBar';
 import { listCategories } from '@/lib/api/categories';
 import {
   createProduct,
   getProduct,
   updateProduct,
+  deleteProduct,
 } from '@/lib/api/products';
 import { apiErrorMessage } from '@/lib/api/client';
 import { parseReaisToCents, maskBRL } from '@/lib/format';
@@ -121,6 +122,20 @@ export function ProductFormPage() {
     },
     onError: (err) => toast.error(apiErrorMessage(err)),
   });
+
+  const deleteMutation = useMutation({
+    mutationFn: () => deleteProduct(id as string),
+    onSuccess: async () => {
+      toast.success('Produto excluído');
+      await qc.invalidateQueries({ queryKey: ['products'] });
+      navigate('/produtos');
+    },
+    onError: (err) => toast.error(apiErrorMessage(err)),
+  });
+
+  function handleDelete() {
+    if (window.confirm('Excluir este produto?')) deleteMutation.mutate();
+  }
 
   return (
     <>
@@ -264,6 +279,23 @@ export function ProductFormPage() {
             'Cadastrar Produto'
           )}
         </button>
+
+        {isEdit && (
+          <button
+            type="button"
+            onClick={handleDelete}
+            disabled={deleteMutation.isPending}
+            className="inline-flex h-11 items-center justify-center gap-2 rounded-lg border border-destructive/40 text-sm font-medium text-destructive hover:bg-destructive/5 disabled:opacity-50"
+          >
+            {deleteMutation.isPending ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <>
+                <Trash2 className="h-4 w-4" /> Excluir produto
+              </>
+            )}
+          </button>
+        )}
       </form>
     </>
   );
