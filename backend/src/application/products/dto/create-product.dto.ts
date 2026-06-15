@@ -41,6 +41,11 @@ export class CreateProductDto {
   @IsString()
   barcode?: string;
 
+  @ApiPropertyOptional({ description: 'Foto do produto em data URL (base64)' })
+  @IsOptional()
+  @IsString()
+  imageUrl?: string;
+
   @ApiProperty({ example: 45 })
   @IsInt()
   @Min(0)

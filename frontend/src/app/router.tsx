@@ -10,6 +10,7 @@ import { CustomerFormPage } from '@/features/customers/CustomerFormPage';
 import { POSPage } from '@/features/pos/POSPage';
 import { CheckoutPage } from '@/features/pos/CheckoutPage';
 import { SalesPage } from '@/features/sales/SalesPage';
+import { NotificationsPage } from '@/features/notifications/NotificationsPage';
 
 export const router = createBrowserRouter([
   { path: '/login', element: <LoginPage /> },
@@ -31,6 +32,7 @@ export const router = createBrowserRouter([
       { path: 'pdv', element: <POSPage /> },
       { path: 'pdv/checkout', element: <CheckoutPage /> },
       { path: 'vendas', element: <SalesPage /> },
+      { path: 'notificacoes', element: <NotificationsPage /> },
     ],
   },
   { path: '*', element: <Navigate to="/" replace /> },

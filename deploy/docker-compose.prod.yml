@@ -34,6 +34,9 @@ services:
       JWT_EXPIRATION: ${JWT_EXPIRATION:-24h}
       CORS_ORIGIN: ${CORS_ORIGIN:?defina CORS_ORIGIN no .env}
       STORE_NAME: ${STORE_NAME:-Loja Teste}
+      VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY:-}
+      VAPID_PRIVATE_KEY: ${VAPID_PRIVATE_KEY:-}
+      VAPID_SUBJECT: ${VAPID_SUBJECT:-mailto:admin@example.com}
     ports:
       - "127.0.0.1:3001:3001"
 

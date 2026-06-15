@@ -25,6 +25,7 @@ export interface CreateProductPayload {
   costPrice?: number;
   categoryId?: string;
   barcode?: string;
+  imageUrl?: string; // foto em data URL (base64)
   stock: number;
 }
 

@@ -1,11 +1,11 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { Loader2 } from 'lucide-react';
+import { Loader2, ImagePlus, X } from 'lucide-react';
 import { TopBar } from '@/components/layout/TopBar';
 import { listCategories } from '@/lib/api/categories';
 import {
@@ -15,6 +15,7 @@ import {
 } from '@/lib/api/products';
 import { apiErrorMessage } from '@/lib/api/client';
 import { parseReaisToCents } from '@/lib/format';
+import { fileToCompressedDataUrl } from '@/lib/image';
 
 const schema = z.object({
   name: z.string().min(1, 'Informe o nome'),
@@ -35,6 +36,9 @@ export function ProductFormPage() {
   const isEdit = Boolean(id);
   const navigate = useNavigate();
   const qc = useQueryClient();
+
+  const [imageUrl, setImageUrl] = useState<string | undefined>(undefined);
+  const [imgLoading, setImgLoading] = useState(false);
 
   const categoriesQ = useQuery({
     queryKey: ['categories'],
@@ -75,8 +79,23 @@ export function ProductFormPage() {
         barcode: productQ.data.barcode ?? '',
         description: productQ.data.description ?? '',
       });
+      setImageUrl(productQ.data.imageUrl ?? undefined);
     }
   }, [productQ.data, reset]);
+
+  async function onPickImage(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    e.target.value = ''; // permite re-selecionar o mesmo arquivo
+    if (!file) return;
+    try {
+      setImgLoading(true);
+      setImageUrl(await fileToCompressedDataUrl(file));
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Falha ao carregar imagem');
+    } finally {
+      setImgLoading(false);
+    }
+  }
 
   const mutation = useMutation({
     mutationFn: async (values: FormValues) => {
@@ -89,6 +108,7 @@ export function ProductFormPage() {
           : undefined,
         categoryId: values.categoryId || undefined,
         barcode: values.barcode || undefined,
+        imageUrl: imageUrl ?? undefined,
         stock: Number(values.stock) || 0,
       };
       if (isEdit) return updateProduct(id as string, payload);
@@ -109,6 +129,46 @@ export function ProductFormPage() {
         onSubmit={handleSubmit((v) => mutation.mutate(v))}
         className="px-4 py-3 flex flex-col gap-3"
       >
+        <div className="flex flex-col gap-1">
+          <label className="text-xs font-medium">Foto</label>
+          <div className="flex items-center gap-3">
+            <div className="h-20 w-20 shrink-0 overflow-hidden rounded-lg bg-muted flex items-center justify-center text-muted-foreground/70">
+              {imgLoading ? (
+                <Loader2 className="h-5 w-5 animate-spin" />
+              ) : imageUrl ? (
+                <img
+                  src={imageUrl}
+                  alt="Pré-visualização"
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <ImagePlus className="h-7 w-7" />
+              )}
+            </div>
+            <div className="flex flex-col gap-2">
+              <label className="inline-flex h-9 cursor-pointer items-center justify-center rounded-md border border-border px-3 text-sm font-medium hover:bg-muted">
+                {imageUrl ? 'Trocar foto' : 'Adicionar foto'}
+                <input
+                  type="file"
+                  accept="image/*"
+                  capture="environment"
+                  className="hidden"
+                  onChange={onPickImage}
+                />
+              </label>
+              {imageUrl && (
+                <button
+                  type="button"
+                  onClick={() => setImageUrl(undefined)}
+                  className="inline-flex items-center gap-1 text-xs text-destructive"
+                >
+                  <X className="h-3 w-3" /> Remover foto
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+
         <Field label="Nome" error={formState.errors.name?.message}>
           <input className="input-base" {...register('name')} />
         </Field>

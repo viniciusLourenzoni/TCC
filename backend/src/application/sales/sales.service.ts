@@ -16,6 +16,14 @@ import { QuerySalesDto } from './dto/query-sales.dto';
 import { SyncResultDto, SyncSalesDto } from './dto/sync-sales.dto';
 import { DashboardStatsDto } from './dto/dashboard-stats.dto';
 import { SaleTypeOrmRepository } from '@infrastructure/database/typeorm/repositories/sale-typeorm.repository';
+import { PaymentMethod } from '@core/domain/enums';
+import { NotificationsService } from '@application/notifications/notifications.service';
+
+const LOW_STOCK_THRESHOLD = 5;
+
+function formatBRL(cents: number): string {
+  return `R$ ${(cents / 100).toFixed(2).replace('.', ',')}`;
+}
 
 @Injectable()
 export class SalesService {
@@ -26,6 +34,7 @@ export class SalesService {
     private readonly products: IProductRepository,
     @Inject(CUSTOMER_REPOSITORY)
     private readonly customers: ICustomerRepository,
+    private readonly notifications: NotificationsService,
   ) {}
 
   list(query: QuerySalesDto): Promise<Sale[]> {
@@ -83,10 +92,37 @@ export class SalesService {
 
     const created = await this.sales.create(sale);
 
-    // Baixa de estoque (best-effort)
+    // Baixa de estoque + alerta de estoque baixo (best-effort)
     for (const item of items) {
       await this.products
         .updateStock(item.productId, -item.quantity)
+        .catch(() => null);
+      try {
+        const product = await this.products.findById(item.productId);
+        if (product && product.stock <= LOW_STOCK_THRESHOLD) {
+          await this.notifications.notify(userId, {
+            type: 'STOCK_LOW',
+            title: 'Estoque baixo',
+            body: `${product.name} está com ${product.stock} unidade(s) em estoque.`,
+            data: { productId: product.id },
+            url: '/produtos',
+          });
+        }
+      } catch {
+        // notificação é best-effort, não pode quebrar a venda
+      }
+    }
+
+    // Alerta de venda fiado (best-effort)
+    if (dto.paymentMethod === PaymentMethod.FIADO) {
+      await this.notifications
+        .notify(userId, {
+          type: 'FIADO',
+          title: 'Venda fiado registrada',
+          body: `Venda de ${formatBRL(created.total)} registrada como fiado.`,
+          data: { saleId: created.id },
+          url: '/vendas',
+        })
         .catch(() => null);
     }
 
@@ -130,6 +166,20 @@ export class SalesService {
         });
       }
     }
+
+    // Resumo da sincronização (best-effort)
+    const createdCount = results.filter((r) => r.status === 'CREATED').length;
+    if (createdCount > 0) {
+      await this.notifications
+        .notify(userId, {
+          type: 'SYNC',
+          title: 'Vendas sincronizadas',
+          body: `${createdCount} venda(s) feita(s) offline foram sincronizadas.`,
+          url: '/vendas',
+        })
+        .catch(() => null);
+    }
+
     return results;
   }
 

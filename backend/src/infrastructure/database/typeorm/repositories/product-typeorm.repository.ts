@@ -99,6 +99,7 @@ export class ProductTypeOrmRepository implements IProductRepository {
       costPrice: e.costPrice ?? undefined,
       categoryId: e.categoryId ?? undefined,
       barcode: e.barcode ?? undefined,
+      imageUrl: e.imageUrl ?? undefined,
       stock: e.stock,
       isActive: e.isActive,
       createdAt: e.createdAt,
@@ -116,6 +117,7 @@ export class ProductTypeOrmRepository implements IProductRepository {
     if (p.costPrice !== undefined) out.costPrice = p.costPrice as number;
     if (p.categoryId !== undefined) out.categoryId = p.categoryId as string;
     if (p.barcode !== undefined) out.barcode = p.barcode as string;
+    if (p.imageUrl !== undefined) out.imageUrl = p.imageUrl as string;
     if (p.stock !== undefined) out.stock = p.stock;
     if (p.isActive !== undefined) out.isActive = p.isActive;
     return out;

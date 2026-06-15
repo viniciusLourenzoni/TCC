@@ -101,8 +101,16 @@ export function ProductsPage() {
                 className="card flex items-center justify-between"
               >
                 <div className="flex items-center gap-3">
-                  <div className="h-11 w-11 rounded-lg bg-primary/10 text-primary inline-flex items-center justify-center">
-                    <Package className="h-5 w-5" />
+                  <div className="h-11 w-11 overflow-hidden rounded-lg bg-primary/10 text-primary inline-flex items-center justify-center">
+                    {p.imageUrl ? (
+                      <img
+                        src={p.imageUrl}
+                        alt={p.name}
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <Package className="h-5 w-5" />
+                    )}
                   </div>
                   <div>
                     <p className="text-sm font-semibold">{p.name}</p>

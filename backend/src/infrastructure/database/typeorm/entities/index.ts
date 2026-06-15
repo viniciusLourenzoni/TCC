@@ -4,3 +4,5 @@ export * from './customer.typeorm.entity';
 export * from './sale.typeorm.entity';
 export * from './sale-item.typeorm.entity';
 export * from './category.typeorm.entity';
+export * from './notification.typeorm.entity';
+export * from './push-subscription.typeorm.entity';

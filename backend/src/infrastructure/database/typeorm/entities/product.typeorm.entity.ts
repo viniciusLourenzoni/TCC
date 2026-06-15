@@ -40,6 +40,9 @@ export class ProductEntity {
   @Index()
   barcode: string;
 
+  @Column({ name: 'image_url', type: 'text', nullable: true }) // foto em data URL (base64)
+  imageUrl: string;
+
   @Column({ type: 'int', default: 0 })
   stock: number;
 

@@ -71,6 +71,27 @@ docker info >/dev/null 2>&1 || DOCKER="sudo docker"
 echo ">> Subindo containers (build pode demorar alguns minutos)"
 $DOCKER compose -f docker-compose.prod.yml --env-file .env up -d --build
 
+# ----- 3b. Chaves VAPID para Web Push (gera na primeira vez e injeta no .env) -----
+if ! grep -q '^VAPID_PUBLIC_KEY=' .env; then
+  echo ">> Gerando chaves VAPID (Web Push)"
+  sleep 5
+  VAPID_JSON="$($DOCKER compose -f docker-compose.prod.yml exec -T backend \
+    node -e "const w=require('web-push');console.log(JSON.stringify(w.generateVAPIDKeys()))" 2>/dev/null || true)"
+  VPUB="$(echo "$VAPID_JSON" | sed -n 's/.*"publicKey":"\([^"]*\)".*/\1/p')"
+  VPRIV="$(echo "$VAPID_JSON" | sed -n 's/.*"privateKey":"\([^"]*\)".*/\1/p')"
+  if [[ -n "$VPUB" && -n "$VPRIV" ]]; then
+    cat >> .env <<EOF
+VAPID_PUBLIC_KEY=$VPUB
+VAPID_PRIVATE_KEY=$VPRIV
+VAPID_SUBJECT=mailto:admin@$DOMAIN
+EOF
+    echo ">> Recriando backend com as chaves VAPID"
+    $DOCKER compose -f docker-compose.prod.yml --env-file .env up -d backend
+  else
+    echo "AVISO: não consegui gerar chaves VAPID; notificações push ficarão desativadas."
+  fi
+fi
+
 # ----- 4. Seed inicial (somente na primeira instalação) -----
 if [[ "$FIRST_INSTALL" == "1" ]]; then
   echo ">> Aguardando API e rodando seed inicial"

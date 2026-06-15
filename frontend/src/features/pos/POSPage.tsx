@@ -1,8 +1,9 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { Bell, Plus, Minus, Search, Package } from 'lucide-react';
+import { Plus, Minus, Search, Package } from 'lucide-react';
 import { TopBar } from '@/components/layout/TopBar';
+import { NotificationBell } from '@/components/NotificationBell';
 import { listProducts } from '@/lib/api/products';
 import { listCategories } from '@/lib/api/categories';
 import { useCartStore } from '@/stores/cartStore';
@@ -61,12 +62,7 @@ export function POSPage() {
                 online ? 'bg-accent' : 'bg-payment-fiado',
               )}
             />
-            <button
-              type="button"
-              className="inline-flex h-9 w-9 items-center justify-center rounded-full hover:bg-muted"
-            >
-              <Bell className="h-5 w-5" />
-            </button>
+            <NotificationBell />
           </div>
         }
       />
@@ -218,8 +214,16 @@ function ProductCard({
       onClick={onAdd}
       className="flex flex-col items-stretch text-left rounded-xl border border-border bg-surface shadow-card p-2 active:scale-[0.99] transition-transform"
     >
-      <div className="aspect-square rounded-lg bg-muted flex items-center justify-center text-muted-foreground/70 mb-2">
-        <Package className="h-8 w-8" />
+      <div className="aspect-square overflow-hidden rounded-lg bg-muted flex items-center justify-center text-muted-foreground/70 mb-2">
+        {product.imageUrl ? (
+          <img
+            src={product.imageUrl}
+            alt={product.name}
+            className="h-full w-full object-cover"
+          />
+        ) : (
+          <Package className="h-8 w-8" />
+        )}
       </div>
       <p className="text-sm font-semibold leading-tight line-clamp-2">
         {product.name}

@@ -6,6 +6,7 @@ export class Product {
   costPrice?: number; // custo, em centavos
   categoryId?: string;
   barcode?: string;
+  imageUrl?: string; // foto em data URL (base64)
   stock: number;
   isActive: boolean;
   createdAt: Date;

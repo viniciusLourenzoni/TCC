@@ -14,6 +14,7 @@ import { ProductsModule } from './presentation/products/products.module';
 import { CustomersModule } from './presentation/customers/customers.module';
 import { CategoriesModule } from './presentation/categories/categories.module';
 import { SalesModule } from './presentation/sales/sales.module';
+import { NotificationsModule } from './presentation/notifications/notifications.module';
 
 @Module({
   imports: [
@@ -64,6 +65,7 @@ import { SalesModule } from './presentation/sales/sales.module';
     CustomersModule,
     CategoriesModule,
     SalesModule,
+    NotificationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

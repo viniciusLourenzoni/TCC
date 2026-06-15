@@ -39,6 +39,7 @@ export interface Product {
   costPrice?: number; // centavos
   categoryId?: string;
   barcode?: string;
+  imageUrl?: string; // foto em data URL (base64)
   stock: number;
   isActive: boolean;
   createdAt: string;
@@ -78,6 +79,18 @@ export interface Sale {
   syncedAt?: string;
   createdAt: string;
   updatedAt: string;
+}
+
+export type NotificationType = 'STOCK_LOW' | 'FIADO' | 'SYNC' | 'CONNECTION';
+
+export interface AppNotification {
+  id: string;
+  type: NotificationType;
+  title: string;
+  body: string;
+  data?: Record<string, unknown>;
+  isRead: boolean;
+  createdAt: string;
 }
 
 export interface DashboardStats {

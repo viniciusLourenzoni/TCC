@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import {
-  Bell,
+  LogOut,
   Package,
   ShoppingCart,
   UserPlus,
@@ -10,7 +10,9 @@ import {
   CircleAlert,
 } from 'lucide-react';
 import { TopBar } from '@/components/layout/TopBar';
+import { NotificationBell } from '@/components/NotificationBell';
 import { useAuthStore } from '@/stores/authStore';
+import { unregisterPush } from '@/lib/push/pushManager';
 import { getDashboardStats, listSales } from '@/lib/api/sales';
 import { formatCents, formatTimeBR } from '@/lib/format';
 import { useNetworkStatus } from '@/lib/sync/useNetworkStatus';
@@ -20,6 +22,12 @@ const storeName = (import.meta.env.VITE_STORE_NAME as string) ?? 'Loja';
 export function DashboardPage() {
   const online = useNetworkStatus();
   const logout = useAuthStore((s) => s.logout);
+
+  async function handleLogout() {
+    await unregisterPush().catch(() => undefined);
+    logout();
+    window.location.href = '/login';
+  }
 
   const statsQ = useQuery({
     queryKey: ['dashboard'],
@@ -45,16 +53,14 @@ export function DashboardPage() {
               }
               aria-label={online ? 'online' : 'offline'}
             />
+            <NotificationBell />
             <button
               type="button"
               className="inline-flex h-9 w-9 items-center justify-center rounded-full hover:bg-muted"
               aria-label="Sair"
-              onClick={() => {
-                logout();
-                window.location.href = '/login';
-              }}
+              onClick={handleLogout}
             >
-              <Bell className="h-5 w-5" />
+              <LogOut className="h-5 w-5" />
             </button>
           </div>
         }

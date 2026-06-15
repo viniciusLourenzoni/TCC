@@ -8,12 +8,14 @@ import { SaleTypeOrmRepository } from '@infrastructure/database/typeorm/reposito
 import { SALE_REPOSITORY } from '@core/repositories/sale.repository.interface';
 import { ProductsModule } from '../products/products.module';
 import { CustomersModule } from '../customers/customers.module';
+import { NotificationsModule } from '../notifications/notifications.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([SaleEntity, SaleItemEntity]),
     ProductsModule,
     CustomersModule,
+    NotificationsModule,
   ],
   controllers: [SalesController],
   providers: [
