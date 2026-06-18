@@ -25,12 +25,20 @@ DB_NAME=pwa_varejo
 JWT_SECRET=$(openssl rand -hex 48)
 JWT_EXPIRATION=24h
 CORS_ORIGIN=https://$DOMAIN
-STORE_NAME=Loja Teste
+STORE_NAME=Shopping das Embalagens
 EOF
   chmod 600 .env
   FIRST_INSTALL=1
 else
   FIRST_INSTALL=0
+fi
+
+# ----- 1a. Nome da loja (idempotente; aplica também em instalações já existentes) -----
+DESIRED_STORE_NAME="Shopping das Embalagens"
+if grep -q '^STORE_NAME=' .env; then
+  sed -i "s|^STORE_NAME=.*|STORE_NAME=$DESIRED_STORE_NAME|" .env
+else
+  echo "STORE_NAME=$DESIRED_STORE_NAME" >> .env
 fi
 
 # ----- 1b. Swap (instâncias pequenas, ex.: Lightsail 1GB, precisam para o build) -----
