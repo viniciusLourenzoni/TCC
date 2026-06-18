@@ -19,10 +19,10 @@ const items = [
 export function BottomNav() {
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 mx-auto w-full max-w-[480px] bg-surface border-t border-border h-16 z-10"
+      className="fixed bottom-0 left-0 right-0 mx-auto w-full max-w-[480px] bg-surface h-16 z-10 isolate before:pointer-events-none before:absolute before:inset-x-0 before:top-0 before:z-20 before:h-px before:bg-border"
       style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
     >
-      <ul className="flex h-full items-stretch justify-around">
+      <ul className="flex h-full items-stretch justify-around overflow-hidden">
         {items.map((item) => {
           const Icon = item.icon;
           return (
