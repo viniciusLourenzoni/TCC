@@ -31,11 +31,13 @@ async function run() {
     console.log(`ℹ️  Admin já existe: ${adminEmail}`);
   }
 
-  // Categorias
+  // Categorias (loja de embalagens)
   const categoriesData = [
-    { name: 'Alimentos', color: '#1E3A8A' },
-    { name: 'Bebidas', color: '#10B981' },
-    { name: 'Outros', color: '#6B7280' },
+    { name: 'Sacolas', color: '#F59E0B' },
+    { name: 'Copos e Descartáveis', color: '#06B6D4' },
+    { name: 'Caixas e Marmitas', color: '#8B5CF6' },
+    { name: 'Papéis e Filmes', color: '#10B981' },
+    { name: 'Fitas e Acessórios', color: '#EF4444' },
   ];
 
   const categoryByName = new Map<string, CategoryEntity>();
@@ -49,40 +51,24 @@ async function run() {
     categoryByName.set(data.name, cat);
   }
 
-  // Produtos do mockup
+  // Produtos (loja de embalagens)
   const productsData = [
-    {
-      name: 'Arroz Branco 5kg',
-      price: 2290,
-      costPrice: 1700,
-      stock: 45,
-      categoryName: 'Alimentos',
-      barcode: '7891000100103',
-    },
-    {
-      name: 'Feijão Preto 1kg',
-      price: 890,
-      costPrice: 620,
-      stock: 30,
-      categoryName: 'Alimentos',
-      barcode: '7891000200203',
-    },
-    {
-      name: 'Óleo de Soja 900ml',
-      price: 790,
-      costPrice: 550,
-      stock: 60,
-      categoryName: 'Alimentos',
-      barcode: '7891000300303',
-    },
-    {
-      name: 'Refrigerante 2L',
-      price: 990,
-      costPrice: 600,
-      stock: 25,
-      categoryName: 'Bebidas',
-      barcode: '7891000400403',
-    },
+    { name: 'Sacola Plástica Branca 30x40 (100un)', price: 1290, costPrice: 900, stock: 80, categoryName: 'Sacolas' },
+    { name: 'Sacola Kraft Delivery M (50un)', price: 2490, costPrice: 1750, stock: 60, categoryName: 'Sacolas' },
+    { name: 'Sacola Boutique c/ Alça (25un)', price: 1990, costPrice: 1400, stock: 40, categoryName: 'Sacolas' },
+    { name: 'Copo Descartável 200ml (100un)', price: 450, costPrice: 300, stock: 150, categoryName: 'Copos e Descartáveis' },
+    { name: 'Copo Descartável 300ml (100un)', price: 690, costPrice: 470, stock: 120, categoryName: 'Copos e Descartáveis' },
+    { name: 'Prato Descartável 15cm (10un)', price: 390, costPrice: 250, stock: 90, categoryName: 'Copos e Descartáveis' },
+    { name: 'Kit Talher Descartável (50un)', price: 890, costPrice: 600, stock: 70, categoryName: 'Copos e Descartáveis' },
+    { name: 'Caixa de Pizza 35cm (25un)', price: 3290, costPrice: 2300, stock: 50, categoryName: 'Caixas e Marmitas' },
+    { name: 'Marmita Isopor (100un)', price: 2890, costPrice: 2000, stock: 60, categoryName: 'Caixas e Marmitas' },
+    { name: 'Caixa Papelão Correios 16x11x6', price: 150, costPrice: 90, stock: 200, categoryName: 'Caixas e Marmitas' },
+    { name: 'Bobina Papel Kraft 30cm', price: 1890, costPrice: 1300, stock: 45, categoryName: 'Papéis e Filmes' },
+    { name: 'Filme PVC 28cm x 300m', price: 1490, costPrice: 1000, stock: 55, categoryName: 'Papéis e Filmes' },
+    { name: 'Papel Manteiga 30x30 (100un)', price: 990, costPrice: 680, stock: 65, categoryName: 'Papéis e Filmes' },
+    { name: 'Fita Adesiva Transparente 45x45', price: 490, costPrice: 320, stock: 130, categoryName: 'Fitas e Acessórios' },
+    { name: 'Fita Crepe 18x50', price: 590, costPrice: 390, stock: 110, categoryName: 'Fitas e Acessórios' },
+    { name: 'Etiqueta Adesiva (rolo 100un)', price: 790, costPrice: 520, stock: 75, categoryName: 'Fitas e Acessórios' },
   ];
 
   for (const p of productsData) {
@@ -95,7 +81,6 @@ async function run() {
       costPrice: p.costPrice,
       stock: p.stock,
       categoryId: cat?.id,
-      barcode: p.barcode,
       isActive: true,
     });
     await productsRepo.save(product);
