@@ -19,10 +19,11 @@ const items = [
 export function BottomNav() {
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 mx-auto w-full max-w-[480px] bg-surface h-16 z-10 isolate before:pointer-events-none before:absolute before:inset-x-0 before:top-0 before:z-20 before:h-px before:bg-border"
+      className="fixed bottom-0 left-0 right-0 mx-auto w-full max-w-[480px] bg-surface z-10"
       style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
     >
-      <ul className="flex h-full items-stretch justify-around overflow-hidden">
+      <div className="h-px w-full bg-border" aria-hidden />
+      <ul className="flex h-16 items-stretch justify-around">
         {items.map((item) => {
           const Icon = item.icon;
           return (
@@ -32,9 +33,9 @@ export function BottomNav() {
                 end={item.exact}
                 className={({ isActive }) =>
                   cn(
-                    'flex h-full flex-col items-center justify-center gap-0.5 text-[11px]',
+                    'flex h-full flex-col items-center justify-center gap-0.5 px-1 pt-0.5 text-[11px]',
                     isActive ? 'text-primary' : 'text-muted-foreground',
-                    item.highlight && !isActive && 'text-primary/80',
+                    item.highlight && !isActive && 'text-primary',
                   )
                 }
               >
@@ -42,14 +43,14 @@ export function BottomNav() {
                   <>
                     <span
                       className={cn(
-                        'inline-flex h-7 w-7 items-center justify-center rounded-full',
+                        'inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full',
                         item.highlight && isActive && 'bg-primary text-white',
-                        item.highlight && !isActive && 'bg-primary/10 text-primary',
+                        item.highlight && !isActive && 'ring-1 ring-primary/25 bg-primary/5',
                       )}
                     >
                       <Icon className="h-4 w-4" />
                     </span>
-                    <span className="font-medium">{item.label}</span>
+                    <span className="font-medium leading-none">{item.label}</span>
                   </>
                 )}
               </NavLink>
